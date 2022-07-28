@@ -76,11 +76,11 @@ export const register = async (req, res) => {
     console.log(userData, token);
     res.status(200).json({ ...userData, token });
   } catch (err) {
-    if (err)
-      res.status(500).json({
-        message: "Failed to register",
-        error: err,
-      });
+    console.log(err);
+    res.status(500).json({
+      message: "Failed to register",
+      error: err,
+    });
   }
 };
 
@@ -98,10 +98,10 @@ export const getMe = async (req, res) => {
 
     res.json(userData);
   } catch (err) {
-    if (err)
-      res.status(500).json({
-        message: "No access",
-        error: err,
-      });
+    console.log(err);
+    res.status(500).json({
+      message: "No access",
+      error: err,
+    });
   }
 };

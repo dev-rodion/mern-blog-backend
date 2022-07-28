@@ -17,8 +17,13 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     avatarUrl: String,
+    type: {
+      type: String,
+      default: "user", // or "admin"
+    },
   },
   {
+    versionKey: false,
     timestamps: true,
   }
 );
