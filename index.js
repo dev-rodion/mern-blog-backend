@@ -1,15 +1,20 @@
 import express from "express";
 import mongoose from "mongoose";
 import multer from "multer";
+
 import {
   loginValidation,
   postCreateValidation,
   registerValidation,
 } from "./validation.js";
-import checkAuth from "./utils/checkAuth.js";
-import checkAccess from "./utils/checkAccess.js";
-import * as UserControllers from "./controllers/UserController.js";
-import * as PostControllers from "./controllers/PostController.js";
+
+import {
+  checkAuth,
+  checkAccess,
+  handleValidationErrors,
+} from "./utils/index.js";
+
+import { PostControllers, UserControllers } from "./controllers/index.js";
 
 const mongoUrl = "mongodb://127.0.0.1:27017/blog";
 const app = express();
@@ -36,8 +41,18 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.post("/auth/login", loginValidation, UserControllers.login);
-app.post("/auth/register", registerValidation, UserControllers.register);
+app.post(
+  "/auth/login",
+  loginValidation,
+  handleValidationErrors,
+  UserControllers.login
+);
+app.post(
+  "/auth/register",
+  registerValidation,
+  handleValidationErrors,
+  UserControllers.register
+);
 app.get("/auth/me", checkAuth, UserControllers.getMe);
 
 app.post("/upload", upload.single("image"), (req, res) => {
