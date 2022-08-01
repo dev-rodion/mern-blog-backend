@@ -19,11 +19,10 @@ export const login = async (req, res) => {
       user._doc.passwordHash
     );
 
-    if (!isValidPass) {
+    if (!isValidPass)
       return res.status(404).json({
         message: "Passwords is not correct",
       });
-    }
 
     const token = jwt.sign(
       {
