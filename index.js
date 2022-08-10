@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import multer from "multer";
+import cors from "cors";
 
 import {
   loginValidation,
@@ -41,6 +42,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+app.use(cors());
 app.post(
   "/auth/login",
   loginValidation,
