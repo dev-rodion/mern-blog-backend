@@ -3,17 +3,9 @@ import mongoose from "mongoose";
 import multer from "multer";
 import cors from "cors";
 
-import {
-  loginValidation,
-  postCreateValidation,
-  registerValidation,
-} from "./validation.js";
+import { loginValidation, postCreateValidation, registerValidation } from "./validation.js";
 
-import {
-  checkAuth,
-  checkAccess,
-  handleValidationErrors,
-} from "./utils/index.js";
+import { checkAuth, checkAccess, handleValidationErrors } from "./utils/index.js";
 
 import { PostControllers, UserControllers } from "./controllers/index.js";
 
@@ -43,20 +35,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.use(cors());
-app.post(
-  "/auth/login",
-  loginValidation,
-  handleValidationErrors,
-  UserControllers.login
-);
-app.post(
-  "/auth/register",
-  registerValidation,
-  handleValidationErrors,
-  UserControllers.register
-);
+app.post("/auth/login", loginValidation, handleValidationErrors, UserControllers.login);
+app.post("/auth/register", registerValidation, handleValidationErrors, UserControllers.register);
 app.get("/auth/me", checkAuth, UserControllers.getMe);
-app.get("/user/:userId", UserControllers.getUser);
+app.get("/auth/:userId", UserControllers.getUser);
 
 app.post("/upload", upload.single("image"), (req, res) => {
   res.json({ url: `/uploads/${req.file.filename}`, success: true });
@@ -66,13 +48,7 @@ app.get("/posts", PostControllers.getAll);
 app.get("/posts/:id", PostControllers.getOne);
 app.post("/posts", checkAuth, postCreateValidation, PostControllers.create);
 app.delete("/posts/:id", checkAuth, checkAccess, PostControllers.remove);
-app.patch(
-  "/posts/:id",
-  checkAuth,
-  checkAccess,
-  postCreateValidation,
-  PostControllers.update
-);
+app.patch("/posts/:id", checkAuth, checkAccess, postCreateValidation, PostControllers.update);
 
 app.listen(port, (err) => {
   if (err) return console.error(err);
