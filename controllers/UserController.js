@@ -13,10 +13,7 @@ export const login = async (req, res) => {
       });
     }
 
-    const isValidPass = await bcrypt.compare(
-      req.body.password,
-      user._doc.passwordHash
-    );
+    const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
     if (!isValidPass)
       return res.status(404).json({
@@ -95,6 +92,28 @@ export const getMe = async (req, res) => {
     console.log(err);
     res.status(500).json({
       message: "No access",
+      error: err,
+    });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User is not found",
+      });
+    }
+
+    const { passwordHash, ...userData } = user._doc;
+
+    res.json(userData);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Error",
       error: err,
     });
   }

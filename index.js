@@ -56,6 +56,7 @@ app.post(
   UserControllers.register
 );
 app.get("/auth/me", checkAuth, UserControllers.getMe);
+app.get("/user/:userId", UserControllers.getUser);
 
 app.post("/upload", upload.single("image"), (req, res) => {
   res.json({ url: `/uploads/${req.file.filename}`, success: true });
