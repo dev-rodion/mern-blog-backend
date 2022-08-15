@@ -19,16 +19,12 @@ const PostModel = new mongoose.Schema(
       default: 0,
     },
     imageUrl: String,
-    autherId: {
-      type: String,
+    user: {
+      type: Object,
       required: true,
     },
-    postDate: {
-      type: Date,
-      default: new Date(),
-    },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: { createdAt: "postDate", updatedAt: "updatedDate" } }
 );
 
 export default mongoose.model("Post", PostModel);

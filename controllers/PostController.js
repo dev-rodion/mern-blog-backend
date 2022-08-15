@@ -1,4 +1,5 @@
 import PostModel from "../models/Post.js";
+import User from "../models/User.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -17,11 +18,7 @@ export const getAll = async (req, res) => {
 export const getOne = async (req, res) => {
   try {
     const postId = req.params.id;
-    const post = await PostModel.findOneAndUpdate(
-      { _id: postId },
-      { $inc: { viewsCount: 1 } },
-      { new: true }
-    )
+    const post = await PostModel.findOneAndUpdate({ _id: postId }, { $inc: { viewsCount: 1 } }, { new: true })
       .then((doc) => {
         if (!doc)
           return res.status(500).json({
@@ -48,12 +45,15 @@ export const getOne = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
+    const user = await User.findById(req.userId);
+    const { passwordHash, ...userData } = user._doc;
+
     const doc = new PostModel({
       title: req.body.title,
       text: req.body.text,
       imageUrl: req.body.imageUrl,
       tags: req.body.tags,
-      autherId: req.userId,
+      user: userData,
     });
 
     const post = await doc.save();
