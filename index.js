@@ -44,6 +44,8 @@ app.post("/upload", upload.single("image"), (req, res) => {
   res.json({ url: `/uploads/${req.file.filename}`, success: true });
 });
 
+app.get("/tags", PostControllers.getLastTags)
+
 app.get("/posts", PostControllers.getAll);
 app.get("/posts/:id", PostControllers.getOne);
 app.post("/posts", checkAuth, postCreateValidation, PostControllers.create);
